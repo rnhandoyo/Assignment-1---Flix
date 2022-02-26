@@ -1,4 +1,4 @@
-# Assignment-1---Flix
+## Assignment-1---Flix
 # Flix
 
 Flix is an app that allows users to browse movies from the [The Movie Database API](http://docs.themoviedb.apiary.io/#).
@@ -22,12 +22,12 @@ Flix is an app that allows users to browse movies from the [The Movie Database A
 
 ### App Walkthrough GIF
 
-// Note: the Gif shows up in HackMd and the file is less than even 6 mb and it still doesn't show up in GitHub
-![](https://i.imgur.com/IaUHarA.gif)
+
+![](https://i.imgur.com/w1nz0J5.gif)
+
 
 
 
 
 ### Notes
 Describe any challenges encountered while building the app.
-
