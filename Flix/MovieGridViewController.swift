@@ -1,32 +1,36 @@
-//
-//  ViewController.swift
+ //
+//  MovieGridViewController.swift
 //  Flix
 //
-//  Created by Ryan Handoyo on 2/19/22.
+//  Created by Ryan Handoyo on 3/2/22.
 //
 
 import UIKit
 import AlamofireImage
 
-class ViewController: UIViewController, UITableViewDataSource, UITableViewDelegate  {
+class MovieGridViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegate {
     
     
+    @IBOutlet var collectionView: UICollectionView!
     
     
-    @IBOutlet weak var tableView: UITableView!
     
     var movies = [[String:Any]]()
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        collectionView.delegate = self
+        collectionView.dataSource = self
         
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         
-        print("Hello friends")
+        layout.minimumLineSpacing = 2
+        layout.minimumInteritemSpacing = 2
+        let width = (view.frame.size.width - layout.minimumInteritemSpacing * 2) / 3
+        layout.itemSize = CGSize(width: width, height: width * 3 / 2)
         
-        let url = URL(string: "https://api.themoviedb.org/3/movie/now_playing?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
+
+        let url = URL(string: "https://api.themoviedb.org/3/movie/634649/similar?api_key=a07e22bc18f5cb106bfe4cc1f83ad8ed")!
         let request = URLRequest(url: url, cachePolicy: .reloadIgnoringLocalCacheData, timeoutInterval: 10)
         let session = URLSession(configuration: .default, delegate: nil, delegateQueue: OperationQueue.main)
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -38,8 +42,8 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
                  
                  self.movies = dataDictionary["results"] as! [[String:Any]]
                  
-                 self.tableView.reloadData()
-
+                 self.collectionView.reloadData()
+                 
                     print(dataDictionary)
                  
                     // TODO: Get the array of movies
@@ -49,21 +53,17 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
              }
         }
         task.resume()
+        
     }
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return movies.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "MovieCell") as! MovieCell
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieGridCell", for: indexPath) as! MovieGridCell
         
-        let movie = movies[indexPath.row]
-        let title = movie["title"] as! String
-        let synopsis = movie["overview"] as! String
-        
-        cell.titleLabel.text = title
-        cell.synopsisLabel.text = synopsis
+        let movie = movies[indexPath.item]
         
         let baseUrl = "https://image.tmdb.org/t/p/w185"
         let posterPath = movie["poster_path"] as! String
@@ -71,25 +71,18 @@ class ViewController: UIViewController, UITableViewDataSource, UITableViewDelega
         
         cell.posterView.af.setImage(withURL: posterUrl!)
         
-        return cell
+        
+         return cell
     }
-    
+
+    /*
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        print ("Loading up the details screen")
-        
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPath(for: cell)!
-        let movie = movies[indexPath.row]
-        let detailsViewController = segue.destination as! MovieDetailsViewController
-        detailsViewController.movie = movie
-        tableView.deselectRow(at: indexPath, animated: true)
     }
-
+    */
 
 }
-
